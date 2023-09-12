@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15.3
+    ports:
+      - ${POSTGRES_PORT}:5432
+    env_file:
+      - .env
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - webdimensions
+  cache:
+    container_name: cache
+    image: redis:7.0
+    command: /bin/sh -c "redis-server --requirepass ${REDIS_PASSWORD}"
+    ports:
+      - ${REDIS_PORT}:6379
+    env_file:
+      - .env
+    volumes:
+      - cache:/data
+    networks:
+      - webdimensions
+
+volumes:
+  cache:
+    driver: local
+  db:
+    driver: local
+
+networks:
+  webdimensions:
+    driver: bridge
