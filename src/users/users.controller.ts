@@ -42,7 +42,7 @@ import { MAX_FILE_SIZE } from 'src/common/constants/validations';
 import { S3Service } from 'src/s3/s3.service';
 import { getFileNameFromS3Url } from 'src/common/utils/get-file-name-from-s3-url';
 
-@Controller('users')
+@Controller({ path: 'users', version: '1' })
 @ApiTags('users')
 export class UsersController {
   constructor(
