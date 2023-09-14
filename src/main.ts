@@ -15,6 +15,10 @@ async function bootstrap() {
     }),
   );
 
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
+
   const config = new DocumentBuilder()
     .addBearerAuth()
     .setTitle('WebDimensionsHub API')
@@ -23,10 +27,6 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('documentation', app, document);
-
-  app.enableVersioning({
-    type: VersioningType.URI,
-  });
 
   await app.listen(process.env.PORT);
 
