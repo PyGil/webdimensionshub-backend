@@ -26,7 +26,7 @@ import { SessionEntity, UserSessionEntity } from 'src/sessions/entities';
 import { RefreshSessionDto } from './dto/refresh-session.dto';
 import { SessionsService } from 'src/sessions/sessions.service';
 
-@Controller('auth')
+@Controller({ path: 'auth', version: '1' })
 @ApiTags('auth')
 export class AuthController {
   constructor(

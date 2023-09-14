@@ -34,7 +34,7 @@ import { ResetPasswordTokenPayload } from 'src/tokens/interfaces/reset-password-
 import { ChangeEmailTokenPayload } from 'src/tokens/interfaces/change-email-token-payload.interface';
 import { DeleteAccountTokenPayload } from 'src/tokens/interfaces/delete-account-payload.interface';
 
-@Controller('verifications')
+@Controller({ path: 'verifications', version: '1' })
 @ApiTags('verifications')
 export class VerificationsController {
   constructor(
