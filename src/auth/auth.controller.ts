@@ -25,6 +25,9 @@ import { BearerGuard } from './guards/bearer.guard';
 import { SessionEntity, UserSessionEntity } from 'src/sessions/entities';
 import { RefreshSessionDto } from './dto/refresh-session.dto';
 import { SessionsService } from 'src/sessions/sessions.service';
+import { TokensService } from 'src/tokens/tokens.service';
+import { RefreshTokenPayload } from 'src/tokens/interfaces/refresh-token-payload.interface';
+import { TokenTypes } from 'src/tokens/constants/token-types';
 
 @Controller({ path: 'auth', version: '1' })
 @ApiTags('auth')
@@ -32,6 +35,7 @@ export class AuthController {
   constructor(
     private readonly sessionsService: SessionsService,
     private readonly usersService: UsersService,
+    private readonly tokensService: TokensService,
   ) {}
 
   @Post()
@@ -112,8 +116,18 @@ export class AuthController {
   @ApiResponse({
     description: 'Response object with tokens for auth',
   })
-  refreshSession(@Body() dto: RefreshSessionDto): Promise<SessionEntity> {
-    return this.sessionsService.refreshSession(dto.refreshToken);
+  async refreshSession(@Body() dto: RefreshSessionDto): Promise<SessionEntity> {
+    try {
+      const tokenPayload =
+        await this.tokensService.verifyToken<RefreshTokenPayload>(
+          dto.refreshToken,
+          TokenTypes.refresh,
+        );
+
+      return this.sessionsService.refreshSession(tokenPayload);
+    } catch (error) {
+      throw new BadRequestException('Token is invalid');
+    }
   }
 
   @Post('logout')
