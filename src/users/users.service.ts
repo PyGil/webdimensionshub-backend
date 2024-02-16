@@ -26,7 +26,7 @@ export class UsersService {
     private readonly s3Service: S3Service,
   ) {}
 
-  async createUser(dto: RegistrationDto): Promise<UserEntity> {
+  createUser(dto: RegistrationDto): Promise<UserEntity> {
     return this.prisma.user.create({
       data: dto,
       select: this.scope,
@@ -51,7 +51,7 @@ export class UsersService {
     });
   }
 
-  async updateUser(userId: number, dto: Partial<User>): Promise<UserEntity> {
+  updateUser(userId: number, dto: Partial<User>): Promise<UserEntity> {
     return this.prisma.user.update({
       where: {
         id: userId,

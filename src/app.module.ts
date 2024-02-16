@@ -12,6 +12,7 @@ import { SessionsModule } from './sessions/sessions.module';
 import { MailerModule } from './mailer/mailer.module';
 import { VerificationsModule } from './verifications/verifications.module';
 import { S3Module } from './s3/s3.module';
+import { SpidersModule } from './spiders/spiders.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { S3Module } from './s3/s3.module';
     MailerModule,
     VerificationsModule,
     S3Module,
+    SpidersModule,
   ],
 })
 export class AppModule {}

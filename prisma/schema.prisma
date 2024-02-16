@@ -32,12 +32,14 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  email              String              @unique
-  username           String              @unique
-  password           String
-  role               UserRole            @default(user)
-  status             UserStatus          @default(active)
+  email    String     @unique
+  username String     @unique
+  password String
+  role     UserRole   @default(user)
+  status   UserStatus @default(active)
+
   verificationTokens VerificationToken[]
+  spiders            Spider[]
 
   avatarUrl String?
 
@@ -57,4 +59,20 @@ model VerificationToken {
   userId Int
 
   @@map("verificationTokens")
+}
+
+model Spider {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name        String
+  description String
+
+  author   User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId Int
+
+  imageUrl String?
+
+  @@map("spiders")
 }
