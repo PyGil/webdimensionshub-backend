@@ -5,6 +5,7 @@ import { TokenTypes } from 'src/tokens/constants/token-types';
 import { TokenPayload } from 'src/tokens/interfaces/token-payload.interface';
 import { TokensService } from 'src/tokens/tokens.service';
 import { SessionEntity } from './entities';
+import { RefreshTokenPayload } from 'src/tokens/interfaces/refresh-token-payload.interface';
 
 @Injectable()
 export class SessionsService {
@@ -46,14 +47,8 @@ export class SessionsService {
     await this.redisService.delete(sessionsListKey);
   }
 
-  async refreshSession(refreshToken: string): Promise<SessionEntity> {
-    const tokenPayload = await this.tokensService.verifyToken(
-      refreshToken,
-      TokenTypes.refresh,
-    );
-
-    const { sub, accessToken, role } = tokenPayload.data;
-
+  async refreshSession(payload: RefreshTokenPayload): Promise<SessionEntity> {
+    const { sub, accessToken, role } = payload;
     const accessTokens = await this.getSessionsList(sub);
     const existAccessToken = accessTokens.includes(accessToken);
 
