@@ -10,8 +10,6 @@ import {
   BadRequestException,
   Put,
   UnprocessableEntityException,
-  FileTypeValidator,
-  MaxFileSizeValidator,
   ParseFilePipe,
   UploadedFile,
   UseInterceptors,
@@ -37,8 +35,7 @@ import { BearerGuard } from 'src/auth/guards/bearer.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { UseRoles } from 'src/common/decorators/use-roles.decorator';
 import { MailerService } from 'src/mailer/mailer.service';
-import { IMAGES_TYPE_REGEX } from 'src/common/constants/regular-expressions';
-import { MAX_FILE_SIZE } from 'src/common/constants/validations';
+import { DEFAULT_IMAGE_VALIDATORS } from 'src/common/constants/validations';
 import { S3Service } from 'src/s3/s3.service';
 import { getFileNameFromS3Url } from 'src/common/utils/get-file-name-from-s3-url';
 
@@ -79,10 +76,7 @@ export class UsersController {
     @Body() dto: UpdateUserDto,
     @UploadedFile(
       new ParseFilePipe({
-        validators: [
-          new MaxFileSizeValidator({ maxSize: MAX_FILE_SIZE }),
-          new FileTypeValidator({ fileType: IMAGES_TYPE_REGEX }),
-        ],
+        validators: DEFAULT_IMAGE_VALIDATORS,
         fileIsRequired: false,
       }),
     )
@@ -99,7 +93,7 @@ export class UsersController {
       }
     }
 
-    const paramsToUpdate: Partial<User> = { username: dto.username };
+    const paramsToUpdate = { username: dto.username } as User;
 
     if (avatar) {
       const user = await this.usersService.findUserById(userId);
