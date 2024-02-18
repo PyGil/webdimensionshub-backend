@@ -11,6 +11,8 @@ import {
   UploadedFile,
   ParseIntPipe,
   NotFoundException,
+  Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { SpidersService } from './spiders.service';
 import { CreateSpiderDto } from './dto/create-spider.dto';
@@ -32,6 +34,9 @@ import { S3Service } from 'src/s3/s3.service';
 import { AddMetaToSpider } from './types/add-meta-to-spider.type';
 import { getFileNameFromS3Url } from 'src/common/utils/get-file-name-from-s3-url';
 import { SpiderEntity } from './entities/spider.entity';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { SpidersPaginationEntity } from 'src/spiders/entities/spiders-pagination.entity';
 
 @Controller({ path: 'spiders', version: '1' })
 @ApiTags('spiders')
@@ -44,9 +49,10 @@ export class SpidersController {
   @Post()
   @UseRoles(UserRole.admin, UserRole.editor)
   @UseGuards(BearerGuard, RolesGuard)
+  @UseInterceptors(FileInterceptor('image'))
   @ApiBearerAuth()
   @ApiOperation({
-    summary: `Create a new spier. Only for Admin or Editor`,
+    summary: 'Create a new spier. Only for Admin or Editor',
   })
   @ApiResponse({
     description:
@@ -79,21 +85,24 @@ export class SpidersController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get a information about the spider',
-  })
-  @ApiResponse({
-    description: 'Response returns an object with information about the spider',
-  })
-  findAllSpiders(): Promise<SpiderEntity[]> {
-    return this.spidersService.findAllSpiders();
-  }
-
-  @Get(':spiderId')
-  @ApiOperation({
     summary: 'Get a list of spiders',
   })
   @ApiResponse({
     description: 'Response returns a list of spiders',
+  })
+  findAllSpiders(
+    @Query()
+    pagination: PaginationDto,
+  ): Promise<SpidersPaginationEntity> {
+    return this.spidersService.findAllSpiders(pagination);
+  }
+
+  @Get(':spiderId')
+  @ApiOperation({
+    summary: 'Get a information about the spider',
+  })
+  @ApiResponse({
+    description: 'Response returns an object with information about the spider',
   })
   findOne(
     @Param('spiderId', ParseIntPipe) spiderId: number,
@@ -104,6 +113,7 @@ export class SpidersController {
   @Patch(':spiderId')
   @UseRoles(UserRole.admin, UserRole.editor)
   @UseGuards(BearerGuard, RolesGuard)
+  @UseInterceptors(FileInterceptor('image'))
   @ApiBearerAuth()
   @ApiOperation({
     summary:
