@@ -18,7 +18,7 @@ npm install
 3. The project requires `Postgres` as the main database and `Redis` as the cache. If you have `Docker` you can use the `docker-compose.yml` file from the root directory to run containers for databases, you can do this by running the following command:
 
 ```bash
-docker compose up -d;
+docker compose up -d
 ```
 
 4. Run the development server:
