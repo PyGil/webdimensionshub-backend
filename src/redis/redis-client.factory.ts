@@ -15,7 +15,7 @@ export const redisClientFactory: FactoryProvider<Promise<RedisClient>> = {
     await client.connect();
 
     client.on('connect', () =>
-      loggerService.log('Redis successfully connected'),
+      loggerService.log('Redis was successfully connected'),
     );
     client.on('error', (error: Error) => loggerService.error(error));
 
