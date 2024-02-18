@@ -7,20 +7,10 @@ import { RegistrationDto } from 'src/auth/dto/index';
 import { omitKeysFromObject } from 'src/common/utils/omit-key-from-object';
 import { S3Service } from 'src/s3/s3.service';
 import { getFileNameFromS3Url } from 'src/common/utils/get-file-name-from-s3-url';
+import { DEFAULT_USER_SCOPE } from './constants/default-user-scope';
 
 @Injectable()
 export class UsersService {
-  private readonly scope = {
-    id: true,
-    createdAt: true,
-    updatedAt: true,
-    email: true,
-    username: true,
-    role: true,
-    status: true,
-    avatarUrl: true,
-  };
-
   constructor(
     private readonly prisma: PrismaService,
     private readonly s3Service: S3Service,
@@ -29,7 +19,7 @@ export class UsersService {
   createUser(dto: RegistrationDto): Promise<UserEntity> {
     return this.prisma.user.create({
       data: dto,
-      select: this.scope,
+      select: DEFAULT_USER_SCOPE,
     });
   }
 
@@ -57,7 +47,7 @@ export class UsersService {
         id: userId,
       },
       data: dto,
-      select: this.scope,
+      select: DEFAULT_USER_SCOPE,
     });
   }
 
@@ -78,7 +68,7 @@ export class UsersService {
   blockUser(userId: number): Promise<UserEntity> {
     return this.prisma.user.update({
       where: { id: userId },
-      select: this.scope,
+      select: DEFAULT_USER_SCOPE,
       data: {
         status: UserStatus.blocked,
         verificationTokens: { deleteMany: {} },
@@ -89,7 +79,7 @@ export class UsersService {
   unblockUser(userId: number): Promise<UserEntity> {
     return this.prisma.user.update({
       where: { id: userId },
-      select: this.scope,
+      select: DEFAULT_USER_SCOPE,
       data: {
         status: UserStatus.active,
       },

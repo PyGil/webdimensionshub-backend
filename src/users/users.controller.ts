@@ -49,6 +49,19 @@ export class UsersController {
     private readonly s3Service: S3Service,
   ) {}
 
+  @Get(':userId')
+  @ApiOperation({ summary: 'Get user profile by id' })
+  @ApiResponse({
+    description: "Response returns an object with the user's profile",
+  })
+  async getUserById(
+    @Param('userId', ParseIntPipe) userId: number,
+  ): Promise<UserEntity> {
+    const user = await this.usersService.findUserById(userId);
+
+    return this.usersService.omitUserPrivateFields(user);
+  }
+
   @Get('me')
   @UseGuards(BearerGuard)
   @ApiBearerAuth()

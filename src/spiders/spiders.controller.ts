@@ -37,6 +37,7 @@ import { SpiderEntity } from './entities/spider.entity';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { SpidersPaginationEntity } from 'src/spiders/entities/spiders-pagination.entity';
+import { SpiderWithAuthor } from './entities/spider-with-author.entity';
 
 @Controller({ path: 'spiders', version: '1' })
 @ApiTags('spiders')
@@ -90,7 +91,7 @@ export class SpidersController {
   @ApiResponse({
     description: 'Response returns a list of spiders',
   })
-  findAllSpiders(
+  getAllSpiders(
     @Query()
     pagination: PaginationDto,
   ): Promise<SpidersPaginationEntity> {
@@ -104,9 +105,9 @@ export class SpidersController {
   @ApiResponse({
     description: 'Response returns an object with information about the spider',
   })
-  findOne(
+  getSpiderById(
     @Param('spiderId', ParseIntPipe) spiderId: number,
-  ): Promise<SpiderEntity | null> {
+  ): Promise<SpiderWithAuthor | null> {
     return this.spidersService.findSpiderById(spiderId);
   }
 

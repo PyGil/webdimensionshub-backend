@@ -9,6 +9,8 @@ import { AddMetaToSpider } from './types/add-meta-to-spider.type';
 import { SpiderEntity } from './entities/spider.entity';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { SpidersPaginationEntity } from 'src/spiders/entities/spiders-pagination.entity';
+import { DEFAULT_USER_SCOPE } from 'src/users/constants/default-user-scope';
+import { SpiderWithAuthor } from './entities/spider-with-author.entity';
 
 @Injectable()
 export class SpidersService {
@@ -35,9 +37,10 @@ export class SpidersService {
     return new SpidersPaginationEntity(spiders, pagination, count);
   }
 
-  findSpiderById(spiderId: number): Promise<SpiderEntity> {
+  findSpiderById(spiderId: number): Promise<SpiderWithAuthor> {
     return this.prisma.spider.findUnique({
       where: { id: spiderId },
+      include: { author: { select: DEFAULT_USER_SCOPE } },
     });
   }
 
