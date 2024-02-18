@@ -13,12 +13,12 @@ The project includes CRUD operations with spiders, authorization and authenticat
 npm install
 ```
 
-2. Create a `.env` file using the `.env.example` file in the root directory
+2. Create a development `.env` file using the `.env.example` file in the root directory.
 
 3. The project requires `Postgres` as the main database and `Redis` as the cache. If you have `Docker` you can use the `docker-compose.yml` file from the root directory to run containers for databases, you can do this by running the following command:
 
 ```bash
-docker compose up -d
+docker-compose up -d
 ```
 
 4. Run the development server:
@@ -33,7 +33,9 @@ Documentation was created using `Swagger`.
 
 ## Production
 
-Run the following command:
+1. Create a production `.env` file using the `.env.example` file in the root directory.
+
+2. Run the following command:
 
 ```bash
 docker-compose -f ./docker-compose-prod.yml up -d
