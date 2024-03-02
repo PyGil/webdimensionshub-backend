@@ -63,6 +63,6 @@ export class SpidersService {
       await this.s3Service.deleteFile(getFileNameFromS3Url(spider.imageUrl));
     }
 
-    await this.prisma.user.delete({ where: { id: spider.id } });
+    await this.prisma.spider.delete({ where: { id: spiderId } });
   }
 }
